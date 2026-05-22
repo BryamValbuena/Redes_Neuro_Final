@@ -34,3 +34,12 @@ export async function checkHealth() {
   const res = await fetch(`${API_BASE}/api/health`);
   return res.json();
 }
+
+export async function fetchHistory(token, limit = 50) {
+  const res = await fetch(`${API_BASE}/api/history?limit=${limit}`, {
+    headers: authHeaders(token),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.detail || "Error al cargar el historial");
+  return data;
+}

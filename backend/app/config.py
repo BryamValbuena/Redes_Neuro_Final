@@ -22,3 +22,10 @@ CORS_ORIGINS = [o.strip() for o in _cors.split(",") if o.strip()]
 API_HOST = os.getenv("API_HOST", "0.0.0.0")
 API_PORT = int(os.getenv("API_PORT", "8000"))
 MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "10"))
+
+# Supabase (backend usa service_role — nunca exponer en el frontend)
+SUPABASE_URL = os.getenv("SUPABASE_URL", "").rstrip("/")
+SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_KEY", "")
+SUPABASE_PUBLISHABLE_KEY = os.getenv("SUPABASE_PUBLISHABLE_KEY", "")
+
+HISTORY_DEFAULT_LIMIT = int(os.getenv("HISTORY_DEFAULT_LIMIT", "50"))

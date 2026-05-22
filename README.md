@@ -1,6 +1,8 @@
 # PlantAI — Clasificación multiclase de enfermedades en plantas
 
-Proyecto de **red neuronal convolucional (CNN)** con **TensorFlow/Keras**, dataset **PlantVillage**, API **FastAPI** y frontend **React + Vite + TailwindCSS**.
+Proyecto de **red neuronal convolucional (CNN)** con **TensorFlow/Keras**, dataset **PlantVillage**, API **FastAPI**, historial **Supabase** y frontend **React + Vite + TailwindCSS**.
+
+**Deployment:** ver [DEPLOYMENT.md](./DEPLOYMENT.md) (Render + Vercel + Supabase).
 
 ## Estructura del proyecto
 
@@ -17,13 +19,16 @@ Proyecto Final/
 │       └── checkpoint_best.keras     # Mejor época (ModelCheckpoint)
 ├── backend/
 │   ├── app/
-│   │   ├── main.py            # API: login, predict, health
-│   │   ├── auth.py            # JWT login básico (sin BD)
+│   │   ├── main.py            # API: login, predict, history, health
+│   │   ├── database.py        # save_prediction / get_prediction_history
+│   │   ├── supabase_client.py # Cliente supabase-py
+│   │   ├── auth.py            # JWT login básico
 │   │   └── config.py          # Variables de entorno
+├── supabase/migrations/       # SQL tabla predictions
 │   └── requirements.txt
 ├── frontend/                  # React + Vite + Tailwind
 │   └── src/
-│       ├── pages/             # Login, Home, Diagnose
+│       ├── pages/             # Login, Home, Diagnose, PredictionHistory
 │       ├── api/client.js      # Cliente HTTP
 │       └── context/AuthContext.jsx
 └── requirements.txt
@@ -92,16 +97,23 @@ Abre http://localhost:5173 — el proxy de Vite redirige `/api` al backend.
 |--------|------|------|-------------|
 | GET | `/api/health` | No | Estado y si el modelo está cargado |
 | POST | `/api/auth/login` | No | `{username, password}` → JWT |
-| POST | `/api/predict` | Bearer | `multipart/form-data` campo `file` |
+| POST | `/api/predict` | Bearer | Predicción + guardado en Supabase |
+| GET | `/api/history` | Bearer | Historial del usuario |
 | GET | `/api/labels` | Bearer | Lista de clases |
 
-## Preparación para la nube (sin implementar aún)
+## Supabase (historial)
 
-- **Backend:** subir carpeta `backend/` + `ml/models/` (modelo ya entrenado, sin re-entrenar)
-- **Frontend:** `npm run build` → servir `frontend/dist` (Vercel, Netlify, S3)
-- Definir `VITE_API_URL` apuntando a la API en producción
-- Cambiar `JWT_SECRET` y credenciales en variables de entorno del host
-- Añadir origen del frontend en `CORS_ORIGINS`
+1. Ejecutar `supabase/migrations/001_predictions.sql` en el SQL Editor
+2. Configurar `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` en `backend/.env`
+3. Cada predicción se guarda automáticamente; ver **Historial** en la app o `GET /api/history`
+
+## Deployment
+
+Guía paso a paso: **[DEPLOYMENT.md](./DEPLOYMENT.md)**
+
+- Backend → **Render** (`render.yaml`)
+- Frontend → **Vercel** (`frontend/vercel.json`)
+- Base de datos → **Supabase**
 
 ## Archivos importantes
 

@@ -51,7 +51,9 @@ export default function Home() {
             }`}
           />
           {health?.model_loaded
-            ? `Modelo listo · ${health.num_classes} clases`
+            ? `Modelo listo · ${health.num_classes} clases${
+                health.supabase_configured ? " · Supabase OK" : " · Supabase pendiente"
+              }`
             : "Modelo pendiente — ejecuta python ml/train.py"}
         </div>
       </section>
