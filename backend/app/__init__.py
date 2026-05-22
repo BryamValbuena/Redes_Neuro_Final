@@ -1,0 +1,1 @@
+"""API Plant Disease Detector."""
