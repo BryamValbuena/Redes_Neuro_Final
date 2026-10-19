@@ -1,0 +1,4 @@
+﻿24dcc50f 24dcc50f2cec05379f66ebd6473ec297109d1947 Add unit tests for extracted helpers and post-refactor evidence.
+ca43a035 ca43a035223ea291cb421992e26a7f286e8273ca Extract prediction helpers and slim FastAPI predict endpoint.
+009d67a5 009d67a5c6bc168c00e0b577c51dfddc15309623 Extract API Pydantic schemas into schemas module.
+3053d698 3053d69827d0a5f451fa2ee746375168c2b515a9 Add initial maintenance tests and static analysis evidence.

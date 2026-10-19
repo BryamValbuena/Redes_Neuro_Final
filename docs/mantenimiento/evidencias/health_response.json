@@ -1,0 +1,6 @@
+﻿{
+    "status":  "ok",
+    "model_loaded":  true,
+    "num_classes":  14,
+    "supabase_configured":  false
+}

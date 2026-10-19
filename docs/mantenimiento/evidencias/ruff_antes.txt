@@ -1,0 +1,16 @@
+﻿backend\app\auth.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+backend\app\auth.py:22:27: UP017 [*] Use `datetime.UTC` alias
+backend\app\auth.py:39:56: B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+backend\app\database.py:2:1: I001 [*] Import block is un-sorted or un-formatted
+backend\app\database.py:63:72: TRY401 Redundant exception object included in `logging.exception` call
+backend\app\main.py:22:1: I001 [*] Import block is un-sorted or un-formatted
+backend\app\main.py:116:24: B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+backend\app\main.py:160:41: RUF010 [*] Use explicit conversion flag
+backend\app\supabase_client.py:22:23: UP037 [*] Remove quotes from type annotation
+ml\inference.py:7:21: F401 [*] `pathlib.Path` imported but unused
+ml\train.py:17:17: F401 [*] `numpy` imported but unused
+ml\train.py:19:22: F401 [*] `tensorflow` imported but unused
+ml\train.py:29:26: RUF100 [*] Unused `noqa` directive (non-enabled: `E402`)
+Found 13 errors.
+[*] 10 fixable with `--fix`.
+
