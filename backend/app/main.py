@@ -9,20 +9,35 @@ from __future__ import annotations
 import logging
 import sys
 from pathlib import Path
-from typing import Any
 
 from fastapi import Depends, FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from backend.app.auth import create_access_token, get_current_user, verify_credentials
-from backend.app.config import CORS_ORIGINS, HISTORY_DEFAULT_LIMIT, MAX_UPLOAD_MB
-from backend.app.database import get_prediction_history, save_prediction
-from backend.app.supabase_client import SupabaseNotConfiguredError, is_supabase_configured
+from backend.app.config import CORS_ORIGINS, HISTORY_DEFAULT_LIMIT
+from backend.app.database import get_prediction_history
+from backend.app.prediction_service import (
+    build_predict_response,
+    get_labels_payload,
+    get_model_status,
+    get_predictor_or_503,
+    try_persist_prediction,
+    validate_image_upload,
+)
+from backend.app.schemas import (
+    HealthResponse,
+    HistoryResponse,
+    LoginRequest,
+    LoginResponse,
+)
+from backend.app.supabase_client import (
+    SupabaseNotConfiguredError,
+    is_supabase_configured,
+)
 from ml.inference import get_predictor
 
 logging.basicConfig(level=logging.INFO)
@@ -43,30 +58,6 @@ app.add_middleware(
 )
 
 
-class LoginRequest(BaseModel):
-    username: str
-    password: str
-
-
-class LoginResponse(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-    username: str
-
-
-class HealthResponse(BaseModel):
-    status: str
-    model_loaded: bool
-    num_classes: int | None = None
-    supabase_configured: bool = False
-
-
-class HistoryResponse(BaseModel):
-    success: bool = True
-    count: int
-    items: list[dict[str, Any]]
-
-
 @app.on_event("startup")
 def warmup_model() -> None:
     try:
@@ -74,7 +65,7 @@ def warmup_model() -> None:
         logger.info("Modelo CNN cargado desde ml/models/plant_disease_cnn.keras")
     except FileNotFoundError:
         logger.warning("Modelo no encontrado. Ejecuta python ml/train.py (solo una vez).")
-    if is_supabase_configured():    
+    if is_supabase_configured():
         logger.info("Supabase configurado correctamente.")
     else:
         logger.warning("Supabase no configurado — historial deshabilitado.")
@@ -82,14 +73,7 @@ def warmup_model() -> None:
 
 @app.get("/api/health", response_model=HealthResponse)
 def health() -> HealthResponse:
-    model_loaded = False
-    num_classes = None
-    try:
-        predictor = get_predictor()
-        model_loaded = True
-        num_classes = len(predictor.labels.get("class_names", []))
-    except FileNotFoundError:
-        pass
+    model_loaded, num_classes = get_model_status()
     return HealthResponse(
         status="ok",
         model_loaded=model_loaded,
@@ -116,63 +100,25 @@ async def predict(
     file: UploadFile = File(...),
     username: str = Depends(get_current_user),
 ) -> dict:
-    if not file.content_type or not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="El archivo debe ser una imagen")
-
     content = await file.read()
-    max_bytes = MAX_UPLOAD_MB * 1024 * 1024
-    if len(content) > max_bytes:
-        raise HTTPException(status_code=400, detail=f"Imagen demasiado grande (máx {MAX_UPLOAD_MB} MB)")
+    validate_image_upload(file.content_type, content)
 
-    try:
-        predictor = get_predictor()
-    except FileNotFoundError as exc:
-        raise HTTPException(
-            status_code=503,
-            detail="Modelo no entrenado. Ejecuta: python ml/train.py",
-        ) from exc
-
+    predictor = get_predictor_or_503()
     result = predictor.predict(content)
     image_name = file.filename or "upload.jpg"
 
-    saved_record: dict[str, Any] | None = None
-    storage_warning: str | None = None
-
-    if is_supabase_configured():
-        try:
-            saved_record = save_prediction(
-                user_id=username,
-                image_name=image_name,
-                predicted_class=result["disease"],
-                confidence=float(result["confidence"]),
-                processing_time_ms=float(result["processing_time_ms"]),
-                image_size_bytes=len(content),
-            )
-        except Exception as exc:
-            import traceback
-
-            print("\n===== ERROR SUPABASE =====")
-            traceback.print_exc()
-            print("==========================\n")
-
-            logger.exception("No se pudo guardar en Supabase")
-
-            storage_warning = f"ERROR: {str(exc)}"
-    else:
-        storage_warning = "Supabase no configurado; historial no disponible."
-
-    response: dict[str, Any] = {
-        "success": True,
-        "user": username,
-        **result,
-    }
-    if saved_record:
-        response["saved"] = True
-        response["prediction_id"] = saved_record.get("id")
-    if storage_warning:
-        response["warning"] = storage_warning
-
-    return response
+    saved_record, storage_warning = try_persist_prediction(
+        username=username,
+        image_name=image_name,
+        result=result,
+        image_size_bytes=len(content),
+    )
+    return build_predict_response(
+        username=username,
+        result=result,
+        saved_record=saved_record,
+        storage_warning=storage_warning,
+    )
 
 
 @app.get("/api/history", response_model=HistoryResponse)
@@ -197,12 +143,5 @@ def history(
 
 
 @app.get("/api/labels")
-def labels(username: str = Depends(get_current_user)) -> dict:
-    try:
-        predictor = get_predictor()
-        return {
-            "class_names": predictor.labels.get("class_names", []),
-            "display_names": predictor.labels.get("display_names", {}),
-        }
-    except FileNotFoundError as exc:
-        raise HTTPException(status_code=503, detail="Modelo no disponible") from exc
+def labels(_username: str = Depends(get_current_user)) -> dict:
+    return get_labels_payload()
