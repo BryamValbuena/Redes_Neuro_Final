@@ -63,6 +63,8 @@ def client(mock_predictor: MagicMock):
     with (
         patch("backend.app.main.get_predictor", return_value=mock_predictor),
         patch("backend.app.main.is_supabase_configured", return_value=False),
+        patch("backend.app.prediction_service.get_predictor", return_value=mock_predictor),
+        patch("backend.app.prediction_service.is_supabase_configured", return_value=False),
         patch("ml.inference.get_predictor", return_value=mock_predictor),
     ):
         from backend.app.main import app

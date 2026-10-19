@@ -31,6 +31,10 @@ class TestHealth:
         with (
             patch("backend.app.main.get_predictor", side_effect=FileNotFoundError("missing")),
             patch("backend.app.main.is_supabase_configured", return_value=False),
+            patch(
+                "backend.app.prediction_service.get_predictor",
+                side_effect=FileNotFoundError("missing"),
+            ),
             patch("ml.inference.get_predictor", side_effect=FileNotFoundError("missing")),
         ):
             from backend.app.main import app
@@ -111,7 +115,7 @@ class TestPredict:
     def test_predict_rejects_oversized(
         self, client: TestClient, auth_headers: dict[str, str]
     ) -> None:
-        with patch("backend.app.main.MAX_UPLOAD_MB", 0):
+        with patch("backend.app.prediction_service.MAX_UPLOAD_MB", 0):
             # 0 MB => cualquier contenido no vacío supera el límite
             files = {"file": ("leaf.png", BytesIO(_tiny_png_bytes()), "image/png")}
             response = client.post("/api/predict", headers=auth_headers, files=files)
@@ -119,7 +123,10 @@ class TestPredict:
         assert "grande" in response.json()["detail"].lower()
 
     def test_predict_model_missing(self, client: TestClient, auth_headers: dict[str, str]) -> None:
-        with patch("backend.app.main.get_predictor", side_effect=FileNotFoundError("no model")):
+        with patch(
+            "backend.app.prediction_service.get_predictor",
+            side_effect=FileNotFoundError("no model"),
+        ):
             files = {"file": ("leaf.png", BytesIO(_tiny_png_bytes()), "image/png")}
             response = client.post("/api/predict", headers=auth_headers, files=files)
         assert response.status_code == 503
@@ -130,8 +137,10 @@ class TestPredict:
     ) -> None:
         saved = {"id": "abc-123"}
         with (
-            patch("backend.app.main.is_supabase_configured", return_value=True),
-            patch("backend.app.main.save_prediction", return_value=saved) as mock_save,
+            patch("backend.app.prediction_service.is_supabase_configured", return_value=True),
+            patch(
+                "backend.app.prediction_service.save_prediction", return_value=saved
+            ) as mock_save,
         ):
             files = {"file": ("leaf.png", BytesIO(_tiny_png_bytes()), "image/png")}
             response = client.post("/api/predict", headers=auth_headers, files=files)
