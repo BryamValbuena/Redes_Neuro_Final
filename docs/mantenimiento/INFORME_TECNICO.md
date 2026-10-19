@@ -124,7 +124,10 @@ Archivos de evidencia:
 4. `24dcc50f…` — tests unitarios + evidencias **después**  
 5. *(commit de informe/documentación, si aplica en el historial posterior)*  
 
-El merge a `main` se documenta en `evidencias/git_merge.txt` tras ejecutarlo.
+**Merge a `main`:** completado con éxito (`--no-ff`).  
+- Commit de merge: `7eb6992e` — *Merge branch refactor/mantenimiento-api into main.*  
+- Evidencia: `docs/mantenimiento/evidencias/git_merge.txt`  
+- Tras el merge, `main` quedó adelantada respecto a `origin/main` (sin `git push`; queda a decisión del autor).
 
 ---
 
