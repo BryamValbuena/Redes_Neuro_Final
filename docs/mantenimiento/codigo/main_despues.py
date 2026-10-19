@@ -34,7 +34,10 @@ from backend.app.schemas import (
     LoginRequest,
     LoginResponse,
 )
-from backend.app.supabase_client import SupabaseNotConfiguredError, is_supabase_configured
+from backend.app.supabase_client import (
+    SupabaseNotConfiguredError,
+    is_supabase_configured,
+)
 from ml.inference import get_predictor
 
 logging.basicConfig(level=logging.INFO)

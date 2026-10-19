@@ -1,0 +1,6 @@
+﻿Rama de trabajo: refactor/mantenimiento-api
+Rama base: main
+Fecha: 2026-10-18 23:03
+Backend health (real): status=ok, model_loaded=true, num_classes=14
+Frontend build: exit 0 (vite build OK)
+Supabase en esta verificación: no configurado (historial deshabilitado en runtime local)

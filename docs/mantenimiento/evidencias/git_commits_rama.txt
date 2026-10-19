@@ -1,0 +1,4 @@
+﻿24dcc50f (HEAD -> refactor/mantenimiento-api) Add unit tests for extracted helpers and post-refactor evidence.
+ca43a035 Extract prediction helpers and slim FastAPI predict endpoint.
+009d67a5 Extract API Pydantic schemas into schemas module.
+3053d698 Add initial maintenance tests and static analysis evidence.
