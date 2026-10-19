@@ -1,0 +1,23 @@
+Advertencias observadas en la ejecución final de pytest (30 passed)
+====================================================================
+
+1) PytestConfigWarning: Unknown config option: asyncio_mode
+   Estado actual: NO aparece.
+   Causa histórica: pytest.ini contenía `asyncio_mode = auto` sin el plugin
+   pytest-asyncio instalado.
+   Corrección aplicada: se eliminó la opción de pytest.ini (no se instaló
+   pytest-asyncio porque las pruebas no usan asyncio markers ni fixtures async
+   de ese plugin; TestClient de FastAPI es suficiente).
+   Verificación: `pip show pytest-asyncio` => no instalado; pytest.ini sin asyncio.
+
+2) DeprecationWarning — TensorFlow / distutils
+   Origen: .venv/.../tensorflow/__init__.py
+   Mensaje: The distutils package is deprecated...
+   Alcance: dependencia externa; no se modificó TensorFlow ni el modelo.
+   No afecta el resultado de las pruebas.
+
+3) DeprecationWarning — FastAPI on_event
+   Origen: backend/app/main.py (@app.on_event("startup")) y fastapi/applications.py
+   Mensaje: on_event is deprecated, use lifespan event handlers instead.
+   Decisión: no migrado en este mantenimiento para no ampliar el alcance
+   funcional; queda como mejora futura documentada.

@@ -1,6 +1,18 @@
-﻿Rama de trabajo: refactor/mantenimiento-api
-Rama base: main
-Fecha: 2026-10-18 23:03
-Backend health (real): status=ok, model_loaded=true, num_classes=14
-Frontend build: exit 0 (vite build OK)
-Supabase en esta verificación: no configurado (historial deshabilitado en runtime local)
+﻿Verificación local backend/frontend — 2026-10-18
+
+Backend:
+  Comando: uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
+  GET /api/health =>
+    status=ok
+    model_loaded=true
+    num_classes=14
+    supabase_configured=false
+  Nota: Supabase no estaba configurado en este entorno local.
+  Las pruebas de historial/persistencia usan mocks (is_supabase_configured,
+  save_prediction, get_prediction_history, SupabaseNotConfiguredError).
+
+Frontend:
+  Comando: npm run build (en frontend/)
+  Resultado: exit code 0
+  Vite build OK (~773 ms en esta ejecución)
+  Mensajes npm notice (si aparecen): informativos; no fallan el build.

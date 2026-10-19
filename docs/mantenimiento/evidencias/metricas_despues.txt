@@ -1,16 +1,11 @@
-﻿backend/app/main.py: 144 lines
-  warmup_model: 10 lines (59-68)
-  health: 8 lines (72-79)
-  login: 5 lines (83-87)
-  me: 2 lines (91-92)
-  predict: 23 lines (96-118)
-  history: 18 lines (122-139)
-  labels: 2 lines (143-144)
-backend/app/prediction_service.py: 118 lines
-  validate_image_upload: 15 lines (24-38)
-  get_predictor_or_503: 6 lines (41-46)
-  get_model_status: 8 lines (49-56)
-  try_persist_prediction: 30 lines (59-88)
-  build_predict_response: 19 lines (91-109)
-  get_labels_payload: 7 lines (112-118)
-backend/app/schemas.py: 30 lines
+﻿Métricas posteriores a la refactorización — medición real
+Fecha verificación: 2026-10-18
+
+backend/app/main.py: 147 líneas totales
+  predict: 23 líneas (líneas 99-121)
+
+Comparación con diagnóstico inicial:
+  main.py: 208 -> 147 líneas
+  predict: 61 -> 23 líneas
+
+Herramienta: ast + conteo de líneas del archivo actual

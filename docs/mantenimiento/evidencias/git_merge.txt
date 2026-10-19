@@ -1,8 +1,12 @@
 ﻿Merge ejecutado: EXITO
-Fecha: 2026-10-18 23:04
+Fecha original del merge: 2026-10-18 23:04
 Rama origen: refactor/mantenimiento-api
 Rama destino: main
 Commit merge: 7eb6992e98b27de5557b2c0fe6b72b78ce3a0681
 Mensaje: Merge branch refactor/mantenimiento-api into main.
-Estado working tree:
-?? docs/mantenimiento/evidencias/git_merge.txt
+
+Verificación posterior (2026-10-18):
+- `git merge-base --is-ancestor 7eb6992e HEAD` => YES (incluido en main)
+- Rama actual: main
+- Este archivo `git_merge.txt` está versionado (commit f7c1507d y actualizaciones posteriores)
+- Sin push a origin (main ahead of origin/main)

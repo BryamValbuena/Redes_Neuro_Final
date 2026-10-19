@@ -8,12 +8,17 @@
 
 ## Análisis estático (Ruff)
 
-Desde la raíz del repositorio:
+Desde la raíz del repositorio. El diagnóstico inicial comparable (13 errores) usó exactamente:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ruff check backend/app ml --output-format=concise
-ruff check backend/app/main.py --statistics
+```
+
+Revisión específica de `main.py` (no sustituye al alcance anterior):
+
+```powershell
+ruff check backend/app/main.py --output-format=concise
 ```
 
 ## Pruebas automatizadas (pytest)
@@ -23,7 +28,7 @@ ruff check backend/app/main.py --statistics
 pytest -v
 ```
 
-Las pruebas **mockean** la inferencia CNN y Supabase; no requieren reentrenar el modelo ni claves reales.
+Las pruebas **mockean** la inferencia CNN y Supabase; no requieren reentrenar el modelo ni claves reales. Detalle de advertencias: `docs/mantenimiento/evidencias/warnings_pytest.txt`.
 
 ## Arranque manual
 

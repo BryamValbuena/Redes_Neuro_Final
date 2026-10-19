@@ -1,5 +1,14 @@
-﻿1	B008	[ ] function-call-in-default-argument
-1	I001	[*] unsorted-imports
-Found 2 errors.
-[*] 1 fixable with `--fix`.
+﻿Ruff — revisión específica de main.py (no confundir con el alcance backend/app + ml)
 
+Comando:
+  ruff check backend/app/main.py --output-format=concise
+
+Resultado:
+  backend\app\main.py:100:24: B008 Do not perform function call `File` in argument defaults
+  Found 1 error.
+
+Conservación de B008:
+  FastAPI documenta y usa File(...)/Depends(...) en valores por defecto de
+  parámetros de endpoints. Corregirlo con Annotated es opcional y no se forzó
+  aquí para evitar un cambio de estilo amplio o impulsado solo por “cero errores”.
+  No hay I001 pendiente en main.py tras el ordenamiento de imports ya aplicado.

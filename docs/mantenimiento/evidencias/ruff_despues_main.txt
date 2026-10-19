@@ -1,0 +1,3 @@
+﻿backend\app\main.py:100:24: B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+Found 1 error.
+
