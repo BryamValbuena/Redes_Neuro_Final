@@ -1,0 +1,6 @@
+﻿Diagnóstico estático inicial — 2026-10-18 23:00
+Herramienta: Ruff 0.17.1
+Alcance: backend/app + ml
+Resultado: 13 errores reportados (véase ruff_antes.txt)
+main.py: 208 líneas totales; función predict = 61 líneas (115-175)
+Pruebas pytest: 17 passed (véase pytest_antes.txt)

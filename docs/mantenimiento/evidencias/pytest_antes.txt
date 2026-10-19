@@ -1,0 +1,58 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.10.0, pytest-9.1.1, pluggy-1.7.0 -- C:\Universidad\Redes Neuronales\Proyecto Final\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Universidad\Redes Neuronales\Proyecto Final
+configfile: pytest.ini
+testpaths: backend/tests
+plugins: anyio-4.13.0
+collecting ... collected 17 items
+
+backend/tests/test_api.py::TestHealth::test_health_ok_with_model PASSED  [  5%]
+backend/tests/test_api.py::TestHealth::test_health_without_model PASSED  [ 11%]
+backend/tests/test_api.py::TestAuth::test_login_ok PASSED                [ 17%]
+backend/tests/test_api.py::TestAuth::test_login_invalid_credentials PASSED [ 23%]
+backend/tests/test_api.py::TestAuth::test_me_requires_auth PASSED        [ 29%]
+backend/tests/test_api.py::TestAuth::test_me_with_token PASSED           [ 35%]
+backend/tests/test_api.py::TestPredict::test_predict_ok PASSED           [ 41%]
+backend/tests/test_api.py::TestPredict::test_predict_requires_auth PASSED [ 47%]
+backend/tests/test_api.py::TestPredict::test_predict_rejects_non_image PASSED [ 52%]
+backend/tests/test_api.py::TestPredict::test_predict_rejects_oversized PASSED [ 58%]
+backend/tests/test_api.py::TestPredict::test_predict_model_missing PASSED [ 64%]
+backend/tests/test_api.py::TestPredict::test_predict_saves_when_supabase_ok PASSED [ 70%]
+backend/tests/test_api.py::TestHistory::test_history_requires_auth PASSED [ 76%]
+backend/tests/test_api.py::TestHistory::test_history_supabase_not_configured PASSED [ 82%]
+backend/tests/test_api.py::TestHistory::test_history_ok PASSED           [ 88%]
+backend/tests/test_api.py::TestLabels::test_labels_ok PASSED             [ 94%]
+backend/tests/test_api.py::TestLabels::test_labels_requires_auth PASSED  [100%]
+
+============================== warnings summary ===============================
+.venv\lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Universidad\Redes Neuronales\Proyecto Final\.venv\lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: asyncio_mode
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+backend/tests/test_api.py::TestHealth::test_health_ok_with_model
+  C:\Universidad\Redes Neuronales\Proyecto Final\.venv\lib\site-packages\tensorflow\__init__.py:30: DeprecationWarning: The distutils package is deprecated and slated for removal in Python 3.12. Use setuptools or check PEP 632 for potential alternatives
+    import distutils as _distutils
+
+backend/tests/test_api.py::TestHealth::test_health_ok_with_model
+  C:\Universidad\Redes Neuronales\Proyecto Final\backend\app\main.py:70: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+backend/tests/test_api.py::TestHealth::test_health_ok_with_model
+  C:\Universidad\Redes Neuronales\Proyecto Final\.venv\lib\site-packages\fastapi\applications.py:4495: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 17 passed, 4 warnings in 3.36s ========================
+
